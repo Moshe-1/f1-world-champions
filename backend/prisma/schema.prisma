@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+//Result connects Race, Driver, and Constructor.
+
+//FastestLap is a separate model with a one-to-one relationship to Result.
+
+//Circuit has a one-to-one relationship with Location.
+
+//You can populate Season using the season field from the top level and from each Race.
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Season {
+  id        Int      @id @default(autoincrement())
+  year      Int      @unique
+  champion  String
+  races     Race[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([year])
+}
+
+model Race {
+  id        Int      @id @default(autoincrement())
+  round     Int
+  name      String
+  date      DateTime
+  season    Season   @relation(fields: [seasonId], references: [id])
+  seasonId  Int
+  circuit   Circuit  @relation(fields: [circuitId], references: [id])
+  circuitId Int
+  results   Result[]
+
+  @@index([seasonId])
+  @@index([date])
+}
+
+model Circuit {
+  id        Int     @id @default(autoincrement())
+  circuitId String  @unique
+  name      String
+  location  Location @relation(fields: [locationId], references: [id])
+  locationId Int
+  races     Race[]
+}
+
+model Location {
+  id       Int     @id @default(autoincrement())
+  lat      Float
+  long     Float
+  locality String
+  country  String
+  circuits Circuit[]
+  @@unique([locality, country], name: "locality_country")
+}
+
+model Driver {
+  id             Int      @id @default(autoincrement())
+  driverId       String   @unique
+  number         Int?
+  code           String?
+  firstName      String
+  lastName       String
+  dateOfBirth    DateTime
+  nationality    String
+  results        Result[]
+}
+
+model Constructor {
+  id             Int      @id @default(autoincrement())
+  constructorId  String   @unique
+  name           String
+  nationality    String
+  results        Result[]
+}
+
+model Result {
+   id            Int         @id @default(autoincrement())
+   race          Race        @relation(fields: [raceId], references: [id])
+   raceId        Int
+   driver        Driver      @relation(fields: [driverId], references: [id])
+   driverId      Int
+   constructor   Constructor @relation(fields: [constructorId], references: [id])
+   constructorId Int
+   position      Int
+   points        Float
+}

@@ -1,0 +1,43 @@
+/* src/styles.css
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';*/
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.container {
+  padding: 20px;
+}
+
+.loading, .error {
+  padding: 20px;
+  text-align: center;
+}
+
+.error {
+  color: #f44336;
+}
+
+.season-item {
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.season-item:hover {
+  background-color: #f5f5f5;
+}
+
+.races-table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.champion {
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+.mat-row.highlighted {
+  background-color: #e8eaf6;
+}

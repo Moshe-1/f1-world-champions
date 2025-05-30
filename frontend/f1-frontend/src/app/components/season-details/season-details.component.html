@@ -1,0 +1,46 @@
+<!-- src/app/components/season-details/season-details.component.html -->
+<h1>wewe2</h1>
+
+<div *ngIf="isLoading" class="loading">Loading season details...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div *ngIf="!isLoading && !error && season">
+  <h2>{{ season.year }} Season - Champion: {{ season.champion }}</h2>
+
+  <mat-table [dataSource]="season.races" class="races-table">
+    <!-- Round Column -->
+    <ng-container matColumnDef="round">
+      <mat-header-cell *matHeaderCellDef>Round</mat-header-cell>
+      <mat-cell *matCellDef="let race">{{ race.round }}</mat-cell>
+    </ng-container>
+
+    <!-- Race Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Grand Prix</mat-header-cell>
+      <mat-cell *matCellDef="let race">{{ race.name }}</mat-cell>
+    </ng-container>
+
+    <!-- Circuit Column -->
+    <ng-container matColumnDef="circuit">
+      <mat-header-cell *matHeaderCellDef>Circuit</mat-header-cell>
+      <mat-cell *matCellDef="let race">
+        {{ race.circuit.name }}, {{ race.circuit.location.locality }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Winner Column -->
+    <ng-container matColumnDef="winner">
+      <mat-header-cell *matHeaderCellDef>Winner</mat-header-cell>
+      <mat-cell *matCellDef="let race"
+                [class.champion]="isChampion(race)">
+        {{ race.results[0].driver.firstName }} {{ race.results[0].driver.lastName }}
+        ({{ race.results[0].constructor.name }})
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="['round', 'name', 'circuit', 'winner']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['round', 'name', 'circuit', 'winner'];"></mat-row>
+  </mat-table>
+
+  <button mat-raised-button color="primary" routerLink="/">Back to Seasons</button>
+</div>
