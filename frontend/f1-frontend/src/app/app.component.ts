@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
-import {filter} from 'rxjs';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +9,4 @@ import {filter} from 'rxjs';
 })
 export class AppComponent {
   title = 'f1-frontend';
-  constructor(private router: Router) {
-    console.log('Current Route:')
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        console.log('Current Route:', event.url);  // Check if routes trigger
-      });
-  }
 }

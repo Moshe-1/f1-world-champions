@@ -7,6 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:coverage": "ng test --code-coverage --watch=false",
     "serve:ssr:f1-frontend": "node dist/f1-frontend/server/server.mjs"
   },
   "private": true,
