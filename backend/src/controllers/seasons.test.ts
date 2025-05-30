@@ -78,7 +78,7 @@ describe('getSeasonData Controller', () => {
 
 
     it('should log errors to console', async () => {
-        const consoleSpy = jest.spyOn(console, 'error', PropertyAccessors).mockImplementation(() => {});
+        const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
         const errorMessage = 'Test error';
         (getSeasonWinners as jest.Mock).mockRejectedValue(new Error(errorMessage));
         mockRequest.params = { year: '2021' };
