@@ -1,7 +1,7 @@
 // src/app/components/season-details/season-details.component.ts
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, RouterModule} from '@angular/router';
-import { F1Service } from '../../services/f1.service';
+import {F1Service} from '../../services/f1.service';
 import {NgIf} from '@angular/common';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
@@ -14,6 +14,7 @@ import {MatButtonModule} from '@angular/material/button';
 
 })
 export class SeasonDetailsComponent implements OnInit {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   season: any;
   isLoading = true;
   error: string | null = null;
@@ -44,7 +45,7 @@ export class SeasonDetailsComponent implements OnInit {
       }
     });
   }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   isChampion(race: any): boolean {
     return race.results[0].driver.lastName === this.season.champion;
   }

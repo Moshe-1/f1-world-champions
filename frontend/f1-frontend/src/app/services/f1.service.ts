@@ -56,7 +56,7 @@ export class F1Service {
     return this.http.get<Season[]>(`${this.apiUrl}/seasons`);
   }
 
-  getSeasonDetails(year: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/seasons/${year}`);
+  getSeasonDetails(year: number): Observable<object> {
+    return this.http.get<object>(`${this.apiUrl}/seasons/${year}`);
   }
 }

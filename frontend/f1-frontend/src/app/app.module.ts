@@ -13,22 +13,6 @@ import { AppComponent } from './app.component';
 import { SeasonsListComponent } from './components/seasons-list/seasons-list.component';
 import { SeasonDetailsComponent } from './components/season-details/season-details.component';
 import { AppRoutingModule } from './app-routing.module';
-import {RouterModule, Routes} from '@angular/router';
-const routes: Routes = [
-  {
-    path: '',
-    component: SeasonsListComponent,
-    pathMatch: 'full'  // ← Add this
-  },
-  {
-    path: 'season/:year',
-    component: SeasonDetailsComponent
-  },
-  {
-    path: '**',
-    redirectTo: ''  // ← Proper wildcard redirect
-  }
-];
 
 @NgModule({
   declarations: [
