@@ -4,9 +4,9 @@ import axios from 'axios';
 const prisma = new PrismaClient();
 const ERGAST_API = 'https://api.jolpi.ca/ergast/api/f1';
 
+// In ergast.service.ts
 export async function getAllSeasons() {
-    const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: currentYear - 2005 + 1 }, (_, i) => 2005 + i);
+    const years = Array.from({ length: 2025 - 2005 + 1 }, (_, i) => 2005 + i);
 
     return Promise.all(years.map(async year => {
         const season = await prisma.season.findUnique({
@@ -17,7 +17,6 @@ export async function getAllSeasons() {
         return season || { year, champion: 'Unknown' };
     }));
 }
-
 export async function getSeasonWinners(year: number) {
     // Validate year
     if (year < 2005 || year > new Date().getFullYear()) {

@@ -1,12 +1,17 @@
 // src/app/components/season-details/season-details.component.ts
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, RouterModule} from '@angular/router';
 import { F1Service } from '../../services/f1.service';
+import {NgIf} from '@angular/common';
+import {MatTableModule} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-season-details',
   templateUrl: './season-details.component.html',
-  styleUrls: ['./season-details.component.css']
+  standalone: true,
+  imports: [NgIf, MatTableModule, MatButtonModule, RouterModule], // Add these
+
 })
 export class SeasonDetailsComponent implements OnInit {
   season: any;

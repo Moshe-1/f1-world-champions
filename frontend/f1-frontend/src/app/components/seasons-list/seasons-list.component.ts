@@ -1,11 +1,17 @@
 // src/app/components/seasons-list/seasons-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { F1Service, Season } from '../../services/f1.service';
+import {NgFor, NgIf} from '@angular/common';
+import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
+import {RouterModule} from '@angular/router';
 
 @Component({
   selector: 'app-seasons-list',
   templateUrl: './seasons-list.component.html',
-  styleUrls: ['./seasons-list.component.css']
+  standalone: true,
+  imports: [NgIf, MatListModule, MatIconModule, RouterModule, NgFor], // Add these
+
 })
 export class SeasonsListComponent implements OnInit {
   seasons: Season[] = [];
@@ -22,6 +28,7 @@ export class SeasonsListComponent implements OnInit {
     this.isLoading = true;
     this.f1Service.getSeasons().subscribe({
       next: (data) => {
+        console.log('Received data:', data); // Add this line
         this.seasons = data;
         this.isLoading = false;
       },

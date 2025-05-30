@@ -1,107 +1,97 @@
-import express, { Request, Response, NextFunction } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import {PrismaClient} from "@prisma/client";
-import seasonRoutes from './routes/seasons';
-// Add this import at the top of index.ts
+//import request from 'supertest';
 import { getSeasonWinners } from './services/ergast.service';
-//import {PrismaClient} from '@prisma/client';
-
-// Load .env variables
-dotenv.config();
-
-// Initialize Express and Prisma
-const app = express();
-const prisma = new PrismaClient();
-
-// Middleware
-app.use(cors({
-    origin: 'http://localhost:4200',
-    methods: ['GET', 'POST']
+import express from "express";
+import { Server } from 'http';
+const request = require('supertest')
+// Mock the ergast service
+jest.mock('./services/ergast.service', () => ({
+    getSeasonWinners: jest.fn()
 }));
-app.use(express.json()); // Parses JSON bodies
-app.use('/api', seasonRoutes);
-// Root route (health check)
-app.get('/api/seasons/:year', (req, res) => {
-    res.json({ year: req.params.year, message: "It works!" });
-});
 
-//app.listen(3000, () => console.log('Server started'));
+describe('Express App', () => {
+    let app: express.Application;
+    let server: Server;
 
-// Global error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.error('Error:', err.message);
-    res.status(500).json({ error: 'Internal Server Error' });
-});
+    beforeAll(async () => {
+        app = express();
+        app.use(express.json());
 
-// Start server
-const PORT = process.env.PORT || 3000;
+        app.get('/api/seasons/:year', (req, res) => {
+            res.json({ year: req.params.year, message: "It works!" });
+        });
 
-app.listen(PORT, async () => {
-    try {
-        await connectToDBWithRetry();
-        console.log(`🚀 Server is running at http://localhost:${PORT}`);
-    } catch (err) {
-        console.error('❌ Could not connect to DB', err);
-        process.exit(1);
-    }
-});
+        app.get('/error', () => { throw new Error('Test error') });
 
-// In index.ts
-/*
-async function connectToDBWithRetry(retries = 5, delay = 60000) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            await prisma.$connect();
-            console.log('✅ Connected to DB');
+        app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+            res.status(500).json({ error: 'Internal Server Error' });
+        });
 
-            // Pre-fetch all seasons
-            const seasons = await prisma.season.findMany({
-                where: { year: { gte: 2005, lte: 2025 } }
+        server = app.listen(0); // Random available port
+    });
+
+    afterAll(async () => {
+        await new Promise<void>((resolve) => server.close(() => resolve()));
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    describe('GET /api/seasons/:year', () => {
+        it('should return health check message', async () => {
+            const response = await request(app).get('/api/seasons/2023');
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({
+                year: '2023',
+                message: "It works!"
             });
-            console.log(`Preloaded ${seasons.length} seasons from 2005-2025`);
+        });
+    });
 
-            return;
-        } catch (err) {
-            console.error(`❌ DB not ready (attempt ${i + 1}/${retries})`);
-            if (i < retries - 1) await new Promise(res => setTimeout(res, delay));
-            else throw err;
-        }
-    }
-}
-*/
+    describe('Error Handling', () => {
+        it('should handle 404 errors', async () => {
+            const response = await request(app).get('/nonexistent-route');
+            expect(response.status).toBe(404);
+        });
 
-// In index.ts
-async function connectToDBWithRetry(retries = 5, delay = 60000) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            await prisma.$connect();
-            console.log('✅ Connected to DB');
+        it('should handle 500 errors', async () => {
+            const response = await request(app).get('/error');
+            expect(response.status).toBe(500);
+            expect(response.body).toEqual({ error: 'Internal Server Error' });
+        });
+    });
+});
 
-            // Run migrations
-            try {
-                await prisma.$executeRaw`SELECT 1 FROM "Season" LIMIT 1`;
-            } catch {
-                console.log('⚙️ Database not migrated, running migrations...');
-                const { execSync } = require('child_process');
-                execSync('npx prisma migrate deploy');
-            }
+describe('connectToDBWithRetry', () => {
+    const mockPrisma = {
+        $connect: jest.fn(),
+        $executeRaw: jest.fn(),
+        $disconnect: jest.fn(),
+        season: { findMany: jest.fn() }
+    };
 
-            // Ensure all seasons from 2005-2025 are cached
-            for (let year = 2005; year <= 2025; year++) {
-                try {
-                    await getSeasonWinners(year); // This will fetch and cache if not exists
-                } catch (error) {
-                    console.warn(`⚠️ Could not fetch season ${year}:`, error);
-                }
-            }
-            console.log('✅ Preloaded seasons from 2005-2025');
+    beforeEach(() => {
+        jest.resetModules();
+        jest.mock('@prisma/client', () => ({
+            PrismaClient: jest.fn(() => mockPrisma)
+        }));
+    });
 
-            return;
-        } catch (err) {
-            console.error(`❌ DB not ready (attempt ${i + 1}/${retries})`);
-            if (i < retries - 1) await new Promise(res => setTimeout(res, delay));
-            else throw err;
-        }
-    }
-}
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should connect successfully', async () => {
+        mockPrisma.$connect.mockResolvedValue(undefined);
+        const { connectToDBWithRetry } = require('./index');
+        await connectToDBWithRetry();
+        expect(mockPrisma.$connect).toHaveBeenCalled();
+    });
+
+    it('should handle connection failure', async () => {
+        mockPrisma.$connect.mockRejectedValue(new Error('Connection failed'));
+        const { connectToDBWithRetry } = require('./index');
+        await expect(connectToDBWithRetry(1, 100))
+            .rejects.toThrow('Connection failed');
+    });
+});

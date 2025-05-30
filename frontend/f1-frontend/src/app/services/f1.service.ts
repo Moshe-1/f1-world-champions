@@ -44,13 +44,14 @@ export interface Location {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root' // This ensures the service is available app-wide
 })
 export class F1Service {
   private apiUrl = 'http://localhost:3000/api';
 
   constructor(private http: HttpClient) { }
 
+  // Update getSeasons to properly type the response
   getSeasons(): Observable<Season[]> {
     return this.http.get<Season[]>(`${this.apiUrl}/seasons`);
   }

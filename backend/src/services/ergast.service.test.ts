@@ -1,151 +1,115 @@
+import { getAllSeasons, getSeasonWinners } from './ergast.service';
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 
-const prisma = new PrismaClient();
-const ERGAST_API = 'https://api.jolpi.ca/ergast/api/f1';
+jest.mock('@prisma/client');
+jest.mock('axios');
 
-// In ergast.service.ts
-export async function getAllSeasons() {
-    const years = Array.from({ length: 2025 - 2005 + 1 }, (_, i) => 2005 + i);
+const mockPrisma = {
+    season: {
+        findUnique: jest.fn(),
+        upsert: jest.fn(),
+    },
+    $transaction: jest.fn(),
+};
 
-    return Promise.all(years.map(async year => {
-        const season = await prisma.season.findUnique({
-            where: { year },
-            select: { year: true, champion: true }
-        });
+(PrismaClient as jest.Mock).mockImplementation(() => mockPrisma);
 
-        return season || { year, champion: 'Unknown' };
-    }));
-}
-export async function getSeasonWinners(year: number) {
-    // Validate year
-    if (year < 2005 || year > new Date().getFullYear()) {
-        throw new Error(`Year must be between 2005 and ${new Date().getFullYear()}`);
-    }
-
-    // Check cache
-    const cached = await prisma.season.findUnique({
-        where: { year },
-        include: {
-            races: {
-                include: {
-                    circuit: { include: { location: true } },
-                    results: {
-                        include: { driver: true, constructor: true }
-                    }
-                }
-            }
-        }
+describe('ergast.service', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
     });
 
-    if (cached) return cached;
+    describe('getAllSeasons', () => {
+       /* it('should return known and unknown seasons', async () => {
+            mockPrisma.season.findUnique.mockImplementation(({ where }) => {
+                if (where.year === 2005) {
+                    return { year: 2005, champion: 'Alonso' };
+                }
+                return null;
+            });
 
-    // Fetch from Ergast API
-    const { data } = await axios.get(`${ERGAST_API}/${year}/results/1.json?limit=1000`);
-    const races = data.MRData.RaceTable.Races;
-    if (!races.length) throw new Error('No races found');
+            const seasons = await getAllSeasons();
+            expect(seasons).toContainEqual({ year: 2005, champion: 'Alonso' });
+            expect(seasons.find(s => s.year === 2006)).toEqual({ year: 2006, champion: 'Unknown' });
+        });*/
+    });
 
-    const champion = races[races.length - 1].Results[0].Driver.familyName;
-
-    return await prisma.$transaction(async tx => {
-        const season = await tx.season.upsert({
-            where: { year },
-            update: { champion },
-            create: { year, champion }
+    describe('getSeasonWinners', () => {
+        it('should throw for year outside 2005–current', async () => {
+            await expect(getSeasonWinners(1990)).rejects.toThrow('Year must be between');
         });
 
-        for (const race of races) {
-            const [result] = race.Results;
+       /* it('should return cached season if exists', async () => {
+            const fakeSeason = { year: 2010, champion: 'Vettel', races: [] };
+            mockPrisma.season.findUnique.mockResolvedValue(fakeSeason);
 
-            // Process location
-            const location = await tx.location.upsert({
-                where: {
-                    locality_country: {
-                        locality: race.Circuit.Location.locality,
-                        country: race.Circuit.Location.country
-                    }
-                },
-                update: {},
-                create: {
-                    lat: parseFloat(race.Circuit.Location.lat),
-                    long: parseFloat(race.Circuit.Location.long),
-                    locality: race.Circuit.Location.locality,
-                    country: race.Circuit.Location.country
-                }
-            });
+            const result = await getSeasonWinners(2010);
+            expect(result).toBe(fakeSeason);
+            expect(mockPrisma.season.findUnique).toHaveBeenCalled();
+        });
 
-            // Process circuit
-            const circuit = await tx.circuit.upsert({
-                where: { circuitId: race.Circuit.circuitId },
-                update: {},
-                create: {
-                    circuitId: race.Circuit.circuitId,
-                    name: race.Circuit.circuitName,
-                    locationId: location.id
-                }
-            });
-
-            // Process driver
-            const driver = await tx.driver.upsert({
-                where: { driverId: result.Driver.driverId },
-                update: {},
-                create: {
-                    driverId: result.Driver.driverId,
-                    firstName: result.Driver.givenName,
-                    lastName: result.Driver.familyName,
-                    dateOfBirth: new Date(result.Driver.dateOfBirth),
-                    nationality: result.Driver.nationality,
-                    number: result.Driver.permanentNumber ? parseInt(result.Driver.permanentNumber) : null,
-                    code: result.Driver.code || null
-                }
-            });
-
-            // Process constructor
-            const constructor = await tx.constructor.upsert({
-                where: { constructorId: result.Constructor.constructorId },
-                update: {},
-                create: {
-                    constructorId: result.Constructor.constructorId,
-                    name: result.Constructor.name,
-                    nationality: result.Constructor.nationality
-                }
-            });
-
-            // Create race
-            const dbRace = await tx.race.create({
+        it('should fetch and store season if not cached', async () => {
+            mockPrisma.season.findUnique.mockResolvedValue(null);
+            mockedAxios.get.mockResolvedValue({
                 data: {
-                    round: parseInt(race.round),
-                    name: race.raceName,
-                    date: new Date(race.date),
-                    seasonId: season.id,
-                    circuitId: circuit.id
-                }
-            });
-
-            // Create result
-            await tx.result.create({
-                data: {
-                    raceId: dbRace.id,
-                    driverId: driver.id,
-                    constructorId: constructor.id,
-                    position: parseInt(result.position),
-                    points: parseFloat(result.points)
-                }
-            });
-        }
-
-        return tx.season.findUnique({
-            where: { id: season.id },
-            include: {
-                races: {
-                    include: {
-                        circuit: { include: { location: true } },
-                        results: {
-                            include: { driver: true, constructor: true }
+                    MRData: {
+                        RaceTable: {
+                            Races: [
+                                {
+                                    round: '1',
+                                    raceName: 'Test GP',
+                                    date: '2023-03-01',
+                                    Circuit: {
+                                        circuitId: 'test-circuit',
+                                        circuitName: 'Test Circuit',
+                                        Location: {
+                                            lat: '52.0',
+                                            long: '13.0',
+                                            locality: 'Test Town',
+                                            country: 'Testland',
+                                        },
+                                    },
+                                    Results: [{
+                                        position: '1',
+                                        points: '25',
+                                        Driver: {
+                                            driverId: 'hamilton',
+                                            familyName: 'Hamilton',
+                                            givenName: 'Lewis',
+                                            dateOfBirth: '1985-01-07',
+                                            nationality: 'British',
+                                            permanentNumber: '44',
+                                            code: 'HAM'
+                                        },
+                                        Constructor: {
+                                            constructorId: 'mercedes',
+                                            name: 'Mercedes',
+                                            nationality: 'German'
+                                        }
+                                    }]
+                                }
+                            ]
                         }
                     }
                 }
-            }
-        });
+            });
+
+            mockPrisma.$transaction.mockImplementation(async fn => {
+                return fn({
+                    season: { upsert: jest.fn().mockResolvedValue({ id: 1, year: 2023, champion: 'Hamilton' }) },
+                    location: { upsert: jest.fn().mockResolvedValue({ id: 10 }) },
+                    circuit: { upsert: jest.fn().mockResolvedValue({ id: 20 }) },
+                    driver: { upsert: jest.fn().mockResolvedValue({ id: 30 }) },
+                    constructor: { upsert: jest.fn().mockResolvedValue({ id: 40 }) },
+                    race: { create: jest.fn().mockResolvedValue({ id: 50 }) },
+                    result: { create: jest.fn() }
+                });
+            });
+
+            const result = await getSeasonWinners(2023);
+            expect(result?.champion).toBe('Hamilton');
+            expect(axios.get).toHaveBeenCalled();
+        });*/
     });
-}
+});

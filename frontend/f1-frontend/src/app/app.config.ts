@@ -1,9 +1,29 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {provideRouter, Routes} from '@angular/router';
 
-import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import {SeasonsListComponent} from './components/seasons-list/seasons-list.component';
+import {SeasonDetailsComponent} from './components/season-details/season-details.component';
+import {provideHttpClient} from '@angular/common/http';
+const routes: Routes = [
+  {
+    path: '',
+    component: SeasonsListComponent,
+    pathMatch: 'full'  // ← Add this
+  },
+  {
+    path: 'season/:year',
+    component: SeasonDetailsComponent
+  },
+  {
+    path: '**',
+    redirectTo: ''  // ← Proper wildcard redirect
+  }
+];
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(withEventReplay())]
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideClientHydration(withEventReplay()),
+    provideHttpClient()]
 };
