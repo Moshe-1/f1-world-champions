@@ -1,46 +1,69 @@
-<!-- src/app/components/season-details/season-details.component.html -->
-<h1>wewe2</h1>
+<div class="season-details-container">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner diameter="50"></mat-spinner>
+    <span>Loading season details...</span>
+  </div>
 
-<div *ngIf="isLoading" class="loading">Loading season details...</div>
-<div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="error" class="error-message mat-elevation-z1">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+  </div>
 
-<div *ngIf="!isLoading && !error && season">
-  <h2>{{ season.year }} Season - Champion: {{ season.champion }}</h2>
+  <div *ngIf="!isLoading && !error && season" class="season-content">
+    <div class="season-header">
+      <h1 class="season-title">{{ season.year }} Formula 1 World Championship</h1>
+      <h2 class="champion-title">
+        <mat-icon class="trophy-icon">emoji_events</mat-icon>
+        Champion: {{ season.champion }}
+      </h2>
+    </div>
 
-  <mat-table [dataSource]="season.races" class="races-table">
-    <!-- Round Column -->
-    <ng-container matColumnDef="round">
-      <mat-header-cell *matHeaderCellDef>Round</mat-header-cell>
-      <mat-cell *matCellDef="let race">{{ race.round }}</mat-cell>
-    </ng-container>
+    <div class="table-container mat-elevation-z2">
+      <mat-table [dataSource]="season.races" class="races-table">
+        <!-- Round Column -->
+        <ng-container matColumnDef="round">
+          <mat-header-cell *matHeaderCellDef class="header-cell">Round</mat-header-cell>
+          <mat-cell *matCellDef="let race" class="cell">{{ race.round }}</mat-cell>
+        </ng-container>
 
-    <!-- Race Name Column -->
-    <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef>Grand Prix</mat-header-cell>
-      <mat-cell *matCellDef="let race">{{ race.name }}</mat-cell>
-    </ng-container>
+        <!-- Race Name Column -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef class="header-cell">Grand Prix</mat-header-cell>
+          <mat-cell *matCellDef="let race" class="cell">{{ race.name }}</mat-cell>
+        </ng-container>
 
-    <!-- Circuit Column -->
-    <ng-container matColumnDef="circuit">
-      <mat-header-cell *matHeaderCellDef>Circuit</mat-header-cell>
-      <mat-cell *matCellDef="let race">
-        {{ race.circuit.name }}, {{ race.circuit.location.locality }}
-      </mat-cell>
-    </ng-container>
+        <!-- Circuit Column -->
+        <ng-container matColumnDef="circuit">
+          <mat-header-cell *matHeaderCellDef class="header-cell">Circuit</mat-header-cell>
+          <mat-cell *matCellDef="let race" class="cell">
+            {{ race.circuit.name }}, {{ race.circuit.location.locality }}
+          </mat-cell>
+        </ng-container>
 
-    <!-- Winner Column -->
-    <ng-container matColumnDef="winner">
-      <mat-header-cell *matHeaderCellDef>Winner</mat-header-cell>
-      <mat-cell *matCellDef="let race"
-                [class.champion]="isChampion(race)">
-        {{ race.results[0].driver.firstName }} {{ race.results[0].driver.lastName }}
-        ({{ race.results[0].constructor.name }})
-      </mat-cell>
-    </ng-container>
+        <!-- Winner Column -->
+        <ng-container matColumnDef="winner">
+          <mat-header-cell *matHeaderCellDef class="header-cell">Winner</mat-header-cell>
+          <mat-cell *matCellDef="let race" class="cell">
+            <span [class.champion-text]="isChampion(race)">
+              {{ race.results[0].driver.firstName }} {{ race.results[0].driver.lastName }}
+              <span class="constructor-name">({{ race.results[0].constructor.name }})</span>
+            </span>
+          </mat-cell>
+        </ng-container>
 
-    <mat-header-row *matHeaderRowDef="['round', 'name', 'circuit', 'winner']"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: ['round', 'name', 'circuit', 'winner'];"></mat-row>
-  </mat-table>
+        <mat-header-row *matHeaderRowDef="['round', 'name', 'circuit', 'winner']"
+                        class="header-row"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['round', 'name', 'circuit', 'winner'];"
+                 [class.champion-row]="isChampion(row)"
+                 class="data-row"></mat-row>
+      </mat-table>
+    </div>
 
-  <button mat-raised-button color="primary" routerLink="/">Back to Seasons</button>
+    <div class="actions">
+      <button mat-raised-button color="primary" routerLink="/" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+        Back to Seasons
+      </button>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,165 @@
+.season-details-container {
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding: 32px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 60px;
+
+    mat-spinner {
+      ::ng-deep circle {
+        stroke: #3498db;
+      }
+    }
+
+    span {
+      color: #7f8c8d;
+      font-size: 1rem;
+    }
+  }
+
+  .error-message {
+    padding: 16px;
+    background-color: #fef6f6;
+    color: #e74c3c;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+    max-width: 500px;
+    border-left: 4px solid #e74c3c;
+  }
+
+  .season-content {
+    .season-header {
+      margin-bottom: 32px;
+      text-align: center;
+
+      .season-title {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 1.8rem;
+      }
+
+      .champion-title {
+        color: #3498db;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 0;
+
+        .trophy-icon {
+          color: #f1c40f;
+          font-size: 1.8rem;
+        }
+      }
+    }
+
+    .table-container {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 32px;
+      border: 1px solid #e0e0e0;
+
+      .races-table {
+        width: 100%;
+
+        .header-row {
+          background-color: #f8f9fa;
+          height: 56px;
+
+          .header-cell {
+            color: #2c3e50;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+        }
+
+        .data-row {
+          height: 52px;
+          transition: background-color 0.2s ease;
+
+          &:hover:not(.champion-row) {
+            background-color: #f5f7fa;
+          }
+
+          &.champion-row {
+            background-color: rgba(52, 152, 219, 0.08);
+            border-left: 4px solid #3498db;
+
+            .cell {
+              font-weight: 500;
+            }
+
+            .champion-text {
+              color: #2c3e50;
+              font-weight: 600;
+              position: relative;
+
+              &::before {
+                content: "";
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background-color: #f1c40f;
+                border-radius: 50%;
+                margin-right: 8px;
+              }
+            }
+          }
+
+          .cell {
+            color: #2c3e50;
+            font-size: 0.95rem;
+
+            .constructor-name {
+              color: #7f8c8d;
+              font-size: 0.85rem;
+            }
+          }
+        }
+      }
+    }
+
+    .actions {
+      text-align: center;
+
+      .back-button {
+        padding: 8px 24px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+
+        mat-icon {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .season-details-container {
+    padding: 24px 16px;
+
+    .season-content {
+      .season-header {
+        .season-title {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+}
