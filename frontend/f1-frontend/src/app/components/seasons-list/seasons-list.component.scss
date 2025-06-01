@@ -1,0 +1,199 @@
+:host {
+  display: block;
+  background: #f8f9fa; /* Light, neutral background */
+  min-height: 100vh;
+}
+
+.champions-container {
+  padding: 32px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .page-title {
+    color: #2c3e50; /* Dark blue-gray for professionalism */
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 2.2rem;
+    letter-spacing: 0.5px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #7f8c8d; /* Soft gray */
+    margin-top: 0;
+    margin-bottom: 40px;
+    font-weight: 400;
+    font-size: 1.1rem;
+  }
+
+  .loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 60px;
+
+    mat-spinner {
+      margin-right: 8px;
+      ::ng-deep circle {
+        stroke: #3498db; /* Pleasant blue */
+      }
+    }
+
+    span {
+      color: #7f8c8d;
+      font-size: 1rem;
+    }
+  }
+
+  .error-message {
+    padding: 16px;
+    background-color: #fef6f6;
+    color: #e74c3c;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+    max-width: 500px;
+    border-left: 4px solid #e74c3c;
+  }
+
+  .champions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 28px;
+    margin-top: 24px;
+  }
+
+  .champion-card {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    background: white;
+    border: 1px solid #e0e0e0; /* Very subtle border */
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+      border-color: #bdc3c7; /* Slightly darker border on hover */
+    }
+
+    &.current-champion {
+      border: 1px solid #3498db; /* Professional blue instead of red */
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+
+      .trophy-icon {
+        color: #f1c40f; /* Gold color */
+        filter: drop-shadow(0 0 2px rgba(241, 196, 15, 0.4));
+      }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #eee;
+
+      .season-year {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2c3e50;
+        letter-spacing: 0.5px;
+      }
+
+      .trophy-icon {
+        color: #f1c40f; /* Gold color */
+        font-size: 2.2rem;
+        transition: transform 0.3s;
+      }
+    }
+
+    .champion-info {
+      display: flex;
+      padding: 20px;
+      gap: 18px;
+      align-items: center;
+
+      .driver-image-placeholder {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+        .driver-icon {
+          font-size: 2.2rem;
+          color: #7f8c8d;
+        }
+      }
+
+      .champion-details {
+        flex: 1;
+
+        .champion-name {
+          margin: 0;
+          color: #2c3e50;
+          font-weight: 500;
+          font-size: 1.2rem;
+          line-height: 1.3;
+        }
+
+        .team-info {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-top: 6px;
+
+          .team-icon {
+            font-size: 1.1rem;
+            color: #3498db;
+          }
+
+          .team-name {
+            font-size: 0.95rem;
+            color: #7f8c8d;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: flex-end;
+      padding: 12px 20px;
+      background-color: #f8f9fa;
+      border-top: 1px solid #eee;
+
+      .details-button {
+        color: #3498db;
+        transition: all 0.2s;
+
+        &:hover {
+          color: #2980b9;
+          transform: translateX(2px);
+        }
+      }
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .champions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .champions-container {
+    padding: 24px 16px;
+  }
+}

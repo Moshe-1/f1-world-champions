@@ -5,12 +5,15 @@ import {F1Service} from '../../services/f1.service';
 import {NgIf} from '@angular/common';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-season-details',
   templateUrl: './season-details.component.html',
+  styleUrls: ['./season-details.component.scss'],
   standalone: true,
-  imports: [NgIf, MatTableModule, MatButtonModule, RouterModule], // Add these
+  imports: [NgIf, MatTableModule, MatButtonModule, RouterModule, MatIconModule, MatProgressSpinnerModule], // Add these
 
 })
 export class SeasonDetailsComponent implements OnInit {

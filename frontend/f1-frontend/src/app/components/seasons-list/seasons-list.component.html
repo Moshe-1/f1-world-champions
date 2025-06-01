@@ -1,17 +1,46 @@
-<!-- src/app/components/seasons-list/seasons-list.component.html -->
-<h1>wewe</h1>
+<div class="champions-container">
+  <h1 class="page-title">🏎 Formula 1 World Champions</h1>
+  <h2 class="subtitle">(2005 - Present)</h2>
 
-<div *ngIf="isLoading" class="loading">Loading seasons...</div>
-<div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="error" class="error-message mat-elevation-z2">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+  <div *ngIf="isLoading" class="loading">Loading seasons...</div>
 
-<mat-list *ngIf="!isLoading && !error">
-  <h2>F1 World Champions (2005-Present)</h2>
-  <mat-list-item *ngFor="let season of seasons"
-                 [routerLink]="['/season', season.year]"
-                 class="season-item">
-    <span>{{ season.year }} - {{ season.champion }}</span>
-    <mat-icon>chevron_right</mat-icon>
-  </mat-list-item>
-</mat-list>
+  <div *ngIf="!isLoading && !error" class="champions-grid">
+    <mat-card *ngFor="let season of seasons"
+              [routerLink]="['/season', season.year]"
+              class="champion-card mat-elevation-z2 current-champion">
+
+      <div class="card-header">
+        <span class="season-year">{{ season.year }}</span>
+        <mat-icon class="trophy-icon">emoji_events</mat-icon>
+      </div>
+
+      <div class="champion-info">
+        <div class="driver-image-placeholder">
+          <mat-icon class="driver-icon">directions_car</mat-icon>
+        </div>
+
+        <div class="champion-details">
+          <h3 class="champion-name">{{ season.champion }}</h3>
+          <div class="team-info">
+            <mat-icon class="team-icon">flag</mat-icon>
+            <span class="team-name">{{ season.year}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button mat-icon-button class="details-button">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+
 
 

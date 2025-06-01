@@ -1,4 +1,3 @@
-// src/app/components/seasons-list/seasons-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { F1Service, Season } from '../../services/f1.service';
 import {NgFor, NgIf} from '@angular/common';
@@ -9,8 +8,9 @@ import {RouterModule} from '@angular/router';
 @Component({
   selector: 'app-seasons-list',
   templateUrl: './seasons-list.component.html',
+  styleUrls: ['./seasons-list.component.scss'],
   standalone: true,
-  imports: [NgIf, MatListModule, MatIconModule, RouterModule, NgFor], // Add these
+  imports: [NgIf, MatListModule,MatIconModule, RouterModule, NgFor], // Add these
 
 })
 export class SeasonsListComponent implements OnInit {
