@@ -1,10 +1,7 @@
-// src/controllers/seasons.test.ts
 import { Request, Response } from 'express';
 import { getSeasonData } from './seasons';
 import { getSeasonWinners } from '../services/ergast.service';
-import * as Console from "console";
 
-// Mock the service
 jest.mock('../services/ergast.service');
 
 describe('getSeasonData Controller', () => {

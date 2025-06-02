@@ -1,4 +1,3 @@
-// src/controllers/seasons.ts
 import { Request, Response } from 'express';
 import { getSeasonWinners } from '../services/ergast.service';
 

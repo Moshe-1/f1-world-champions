@@ -1,4 +1,3 @@
-// src/app/components/season-details/season-details.component.ts
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, RouterModule} from '@angular/router';
 import {F1Service} from '../../services/f1.service';

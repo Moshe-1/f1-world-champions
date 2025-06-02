@@ -1,9 +1,6 @@
-//import request from 'supertest';
-import { getSeasonWinners } from './services/ergast.service';
 import express from "express";
 import { Server } from 'http';
 const request = require('supertest')
-// Mock the ergast service
 jest.mock('./services/ergast.service', () => ({
     getSeasonWinners: jest.fn()
 }));

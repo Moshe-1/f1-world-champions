@@ -1,12 +1,7 @@
-// src/routes/seasons.test.ts
-//import request from 'supertest';
-//import * as request from 'supertest';
-
 import express from 'express';
 import router from './seasons';
 import { getSeasonWinners, getAllSeasons } from '../services/ergast.service';
 const request = require('supertest')
-// Type the mocked functions
 jest.mock('../services/ergast.service', () => ({
     getSeasonWinners: jest.fn(),
     getAllSeasons: jest.fn()
@@ -91,12 +86,10 @@ describe('Seasons Router', () => {
 
 
 
-            //mockedGetSeasonWinners.mockResolvedValue(mockData);
 
             const response = await request(app).get('/api/seasons/seasons/2021');
 
             expect(response.status).toBe(200);
-            //expect(response.body).toEqual(mockData);
             expect(mockedGetSeasonWinners).toHaveBeenCalledWith(2021);
         });
 
@@ -136,60 +129,4 @@ describe('Seasons Router', () => {
             expect(typeof response.body.error).toBe('object');
         });
     });
-
-
-    /* describe('GET /api/seasons/:year', () => {
-         it('should return 400 for invalid year format', async () => {
-             const response = await request(app).get('/api/seasons/not-a-number');
-             expect(response.status).toBe(400);
-             expect(response.body).toEqual({ error: 'Invalid year format' });
-         });
-
-         it('should return season data for valid year', async () => {
-             const mockData = { year: 2021, champion: 'Verstappen', races: [] };
-             mockedGetSeasonWinners.mockResolvedValue(mockData);
-
-             const response = await request(app).get('/api/seasons/2021');
-
-             expect(response.status).toBe(200);
-             expect(response.body).toEqual(mockData);
-             expect(mockedGetSeasonWinners).toHaveBeenCalledWith(2021);
-         });
-
-         it('should handle service errors', async () => {
-             mockedGetSeasonWinners.mockRejectedValue(new Error('DB error'));
-
-             const response = await request(app).get('/api/seasons/2021');
-
-             expect(response.status).toBe(500);
-             expect(response.body).toEqual({
-                 error: 'Failed to fetch season data',
-                 details: 'DB error'
-             });
-         });
-     });
-
-     describe('GET /api/seasons', () => {
-         it('should return all seasons', async () => {
-             const mockSeasons = [
-                 { year: 2020, champion: 'Hamilton' },
-                 { year: 2021, champion: 'Verstappen' }
-             ];
-             mockedGetAllSeasons.mockResolvedValue(mockSeasons);
-
-             const response = await request(app).get('/api/seasons');
-
-             expect(response.status).toBe(200);
-             expect(response.body).toEqual(mockSeasons);
-         });
-
-         it('should handle errors when fetching all seasons', async () => {
-             mockedGetAllSeasons.mockRejectedValue(new Error('Fetch error'));
-
-             const response = await request(app).get('/api/seasons');
-
-             expect(response.status).toBe(500);
-             expect(typeof response.body.error).toBe('string');
-         });
-     });*/
 });

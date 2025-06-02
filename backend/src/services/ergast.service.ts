@@ -4,7 +4,6 @@ import axios from 'axios';
 const prisma = new PrismaClient();
 const ERGAST_API = 'https://api.jolpi.ca/ergast/api/f1';
 
-// In ergast.service.ts
 export async function getAllSeasons() {
     const years = Array.from({ length: 2025 - 2005 + 1 }, (_, i) => 2005 + i);
 

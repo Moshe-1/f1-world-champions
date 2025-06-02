@@ -1,4 +1,3 @@
-// src/app/services/f1.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -51,7 +50,6 @@ export class F1Service {
 
   constructor(private http: HttpClient) { }
 
-  // Update getSeasons to properly type the response
   getSeasons(): Observable<Season[]> {
     return this.http.get<Season[]>(`${this.apiUrl}/seasons`);
   }
