@@ -1,4 +1,3 @@
-// src/routes/seasons.ts
 import { Router, Request, Response } from 'express';
 import { getSeasonWinners, getAllSeasons } from '../services/ergast.service';
 
@@ -33,20 +32,4 @@ router.get('/seasons', async (req, res) => {
         res.status(500).json({ error: error });
     }
 });
-
-// Get specific season with races
-/*router.get('/:year', async (req, res) => {
-    try {
-        const year = parseInt(req.params.year);
-        if (isNaN(year)) {
-            return res.status(400).json({ error: 'Invalid year' });
-        }
-        const seasonData = await getSeasonWinners(year);
-        res.json(seasonData);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});*/
-
-
 export default router;
