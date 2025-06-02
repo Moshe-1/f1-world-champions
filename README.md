@@ -30,69 +30,89 @@ Node.js 18+
 
 npm 9+
 
-Getting Started
-With Docker (Recommended)
+
 bash
 # Build and start all services
+Getting started with Docker (Recommended)
+
+cd into infrastructure and run the below
+
 docker-compose up --build
 
-# Access applications:
-# Frontend: http://localhost:4200
-# Backend API: http://localhost:3000
-##Without Docker
-bash
-# Backend
-cd backend
+# Running Frontend 
+cd frontend/f1-frontend
+
 npm install
+
+npm start
+
+http://localhost:4200
+
+# Running Backend without Docker
+
+cd backend
+
+npm install
+
 npm run dev
 
-# Frontend (in separate terminal)
-cd frontend/f1-frontend
-npm install
-npm start
+http://localhost:3000
+
+
+
 Development
-Backend Structure
-backend/
-├── src/
-│   ├── routes/       # API endpoints
-│   ├── services/     # Business logic
-│   ├── index.ts      # App entry point
-├── prisma/           # Database schema
-Frontend Structure
-frontend/
-├── src/app/
-│   ├── components/   # UI components
-│   ├── services/     # API clients
-│   ├── models/       # Data models
-Useful Commands
-bash
-# Run Prisma Studio (database GUI)
+
+#Backend Structure
+
+backend/src/routes/       # API endpoints
+
+backend/src/services/     # Business logic
+
+backend/src/index.ts      # App entry point
+prisma/           # Database schema
+
+#Frontend Structure
+frontend/src/app/components/   # UI components
+
+frontend/src/app/services/     # API clients
+
+frontend/src/app/models/       # Data models
+
+
+#Useful Commands
+## Run Prisma Studio (database GUI)
 npx prisma studio
 
-# Generate Prisma client
+## Generate Prisma client
 npx prisma generate
 
-# Apply migrations
+## Apply migrations
 npx prisma migrate dev
-Testing
-Backend Tests
-bash
-cd backend
-npm test        # Run all tests
-npm run test:watch  # Watch mode
-Frontend Tests
-bash
-cd frontend/f1-frontend
-npm test        # Run all tests
-npm run test:coverage  # With coverage
-Linting
-bash
-# Backend
-npm run lint
 
-# Frontend
+##Testing
+##Backend Tests
+
+cd backend
+
+npm test 
+
+npm run test:watch  # Watch mode
+
+##Frontend Tests
+cd frontend/f1-frontend
+
+npm test        # Run all tests
+
+npm run test:coverage  # With coverage
+
+##Linting
+
+cd frontend/f1-frontend
+
 ng lint
-CI/CD Pipeline
+
+#CI/CD Pipeline
+
 The GitHub Actions workflow (ci.yml) performs:
 
 Backend tests with PostgreSQL service
@@ -107,8 +127,10 @@ Push to main branch
 
 Pull requests targeting main
 
-API Documentation
+#API Documentation
+
 Base URL
+
 http://localhost:3000/api
 
 Endpoints
