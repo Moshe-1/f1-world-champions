@@ -65,16 +65,16 @@ describe('SeasonDetailsComponent', () => {
 
   it('should return true if the driver is the champion', () => {
     component.season = {
-      champion: 'Verstappen'
+      champion: 'Max Verstappen'
     };
 
     const race = {
       results: [
-        { driver: { lastName: 'Verstappen' } }
+        { driver: { lastName: 'Verstappen', firstName: 'Max' } }
       ]
     };
 
-    expect(component.isChampion(race)).toBeFalse();
+    expect(component.isChampion(race)).toBeTrue();
   });
 
   it('should return false if the driver is not the champion', () => {
