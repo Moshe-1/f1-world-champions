@@ -18,4 +18,5 @@ COPY . .
 # Build (if using TypeScript)
 RUN npm run build
 
+# Executes from /app
 CMD ["node", "dist/index.js"]
