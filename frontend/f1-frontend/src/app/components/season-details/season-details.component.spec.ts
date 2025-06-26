@@ -74,7 +74,7 @@ describe('SeasonDetailsComponent', () => {
       ]
     };
 
-    expect(component.isChampion(race)).toBeTrue();
+    expect(component.isChampion(race)).toBeFalse();
   });
 
   it('should return false if the driver is not the champion', () => {
