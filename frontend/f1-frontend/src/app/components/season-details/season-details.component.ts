@@ -49,6 +49,6 @@ export class SeasonDetailsComponent implements OnInit {
   }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
   isChampion(race: any): boolean {
-    return race.results[0].driver.lastName === this.season.champion;
+    return race.results[0].driver.firstName +' '+race.results[0].driver.lastName === this.season.champion;
   }
 }

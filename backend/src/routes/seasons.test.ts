@@ -18,7 +18,7 @@ describe('Seasons Router', () => {
     beforeAll(() => {
         app = express();
         app.use(express.json());
-        app.use('/api/seasons', router); // Match your actual route prefix
+        app.use('/api/seasons', router);
     });
 
     afterEach(() => {
@@ -33,60 +33,6 @@ describe('Seasons Router', () => {
         });
 
         it('should return season data for valid year', async () => {
-            const mockData = {
-                id: 1,
-                year: 2023,
-                champion: "Max Verstappen",
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                races: [
-                    {
-                        round: 1,
-                        date: "2023-03-05",
-                        circuit: {
-                            id: 1,
-                            name: "Bahrain International Circuit",
-                            circuitId: "bahrain",
-                            locationId: 1,
-                            location: {
-                                id: 1,
-                                lat: 26.0325,
-                                long: 50.5106,
-                                locality: "Sakhir",
-                                country: "Bahrain"
-                            }
-                        },
-                        results: [
-                            {
-                                driver: {
-                                    number: 1,
-                                    id: 1,
-                                    driverId: "verstappen",
-                                    code: "VER",
-                                    firstName: "Max",
-                                    lastName: "Verstappen",
-                                    dateOfBirth: new Date("1997-09-30"),
-                                    nationality: "Dutch"
-                                },
-                                constructor: {
-                                    id: 1,
-                                    constructorId: "red_bull",
-                                    name: "Red Bull",
-                                    nationality: "Austrian",
-                                    url: "https://example.com/red_bull",
-                                    createdAt: new Date(),
-                                    updatedAt: new Date(),
-                                    caller: null
-                                }
-                            }
-                        ]
-                    }
-                ]
-            };
-
-
-
-
             const response = await request(app).get('/api/seasons/seasons/2021');
 
             expect(response.status).toBe(200);

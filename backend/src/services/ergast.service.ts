@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
+import {ErgastRace} from "../types/f1";
 
 const prisma = new PrismaClient();
 const ERGAST_API = 'https://api.jolpi.ca/ergast/api/f1';
@@ -44,7 +45,7 @@ export async function getSeasonWinners(year: number) {
     const races = data.MRData.RaceTable.Races;
     if (!races.length) throw new Error('No races found');
 
-    const champion = races[races.length - 1].Results[0].Driver.familyName;
+    const champion = calculateChampion(races);
 
     return await prisma.$transaction(async tx => {
         const season = await tx.season.upsert({
@@ -147,4 +148,26 @@ export async function getSeasonWinners(year: number) {
             }
         });
     });
+}
+
+function calculateChampion(races: ErgastRace[]): string {
+    const driverPoints: Record<string, number> = {};
+
+    for (const race of races) {
+        for (const result of race.Results) {
+            const driver = result.Driver.givenName + ' ' +result.Driver.familyName;
+            const points = parseFloat(result.points);
+
+            if (!isNaN(points) && points >= 0) {
+                driverPoints[driver] = (driverPoints[driver] ?? 0) + points;
+            }
+        }
+    }
+    const sortedDrivers = Object.entries(driverPoints).sort(([, a], [, b]) => b - a);
+
+    const [champion, totalPoints] = sortedDrivers[0];
+
+    console.log(`Season Champion: ${champion} (Total Points: ${totalPoints})`);
+
+    return champion;
 }

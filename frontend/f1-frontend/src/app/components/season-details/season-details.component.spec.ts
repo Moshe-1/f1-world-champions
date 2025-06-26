@@ -65,12 +65,12 @@ describe('SeasonDetailsComponent', () => {
 
   it('should return true if the driver is the champion', () => {
     component.season = {
-      champion: 'Verstappen'
+      champion: 'Max Verstappen'
     };
 
     const race = {
       results: [
-        { driver: { lastName: 'Verstappen' } }
+        { driver: { lastName: 'Verstappen', firstName: 'Max' } }
       ]
     };
 
