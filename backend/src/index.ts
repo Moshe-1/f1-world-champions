@@ -3,9 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import {PrismaClient} from "@prisma/client";
 import seasonRoutes from './routes/seasons';
-// Add this import at the top of index.ts
 import { getSeasonWinners } from './services/ergast.service';
-//import {PrismaClient} from '@prisma/client';
 
 // Load .env variables
 dotenv.config();
@@ -26,8 +24,6 @@ app.get('/api/seasons/:year', (req, res) => {
     res.json({ year: req.params.year, message: "It works!" });
 });
 
-//app.listen(3000, () => console.log('Server started'));
-
 // Global error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error('Error:', err.message);
@@ -47,31 +43,6 @@ app.listen(PORT, async () => {
     }
 });
 
-// In index.ts
-/*
-async function connectToDBWithRetry(retries = 5, delay = 60000) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            await prisma.$connect();
-            console.log('✅ Connected to DB');
-
-            // Pre-fetch all seasons
-            const seasons = await prisma.season.findMany({
-                where: { year: { gte: 2005, lte: 2025 } }
-            });
-            console.log(`Preloaded ${seasons.length} seasons from 2005-2025`);
-
-            return;
-        } catch (err) {
-            console.error(`❌ DB not ready (attempt ${i + 1}/${retries})`);
-            if (i < retries - 1) await new Promise(res => setTimeout(res, delay));
-            else throw err;
-        }
-    }
-}
-*/
-
-// In index.ts
 export async function connectToDBWithRetry(retries = 5, delay = 60000) {
     for (let i = 0; i < retries; i++) {
         try {
