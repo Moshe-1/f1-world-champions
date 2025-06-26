@@ -150,7 +150,7 @@ export async function getSeasonWinners(year: number) {
     });
 }
 
-function calculateChampion(races: ErgastRace[]): string {
+export function calculateChampion(races: ErgastRace[]): string {
     const driverPoints: Record<string, number> = {};
 
     for (const race of races) {
