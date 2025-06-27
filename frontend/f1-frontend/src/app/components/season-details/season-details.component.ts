@@ -12,7 +12,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   templateUrl: './season-details.component.html',
   styleUrls: ['./season-details.component.scss'],
   standalone: true,
-  imports: [NgIf, MatTableModule, MatButtonModule, RouterModule, MatIconModule, MatProgressSpinnerModule], // Add these
+  imports: [NgIf, MatTableModule, MatButtonModule, RouterModule, MatIconModule, MatProgressSpinnerModule],
 
 })
 export class SeasonDetailsComponent implements OnInit {
