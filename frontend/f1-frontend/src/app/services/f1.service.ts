@@ -41,9 +41,9 @@ export interface Location {
   locality: string;
   country: string;
 }
-
+// Ensure the service is available app-wide
 @Injectable({
-  providedIn: 'root' // This ensures the service is available app-wide
+  providedIn: 'root'
 })
 export class F1Service {
   private apiUrl = 'http://localhost:3000/api';

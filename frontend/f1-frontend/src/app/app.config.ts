@@ -9,7 +9,7 @@ const routes: Routes = [
   {
     path: '',
     component: SeasonsListComponent,
-    pathMatch: 'full'  // ← Add this
+    pathMatch: 'full'
   },
   {
     path: 'season/:year',
@@ -17,7 +17,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: ''  // ← Proper wildcard redirect
+    redirectTo: ''
   }
 ];
 
