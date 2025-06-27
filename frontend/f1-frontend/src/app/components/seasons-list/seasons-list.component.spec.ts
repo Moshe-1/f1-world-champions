@@ -21,7 +21,7 @@ describe('SeasonsListComponent', () => {
       imports: [SeasonsListComponent],
       providers: [
         { provide: F1Service, useValue: spy },
-        { provide: ActivatedRoute, useValue: {} } // ✅ Mock ActivatedRoute
+        { provide: ActivatedRoute, useValue: {} } // Mock ActivatedRoute
       ]
     }).compileComponents();
 

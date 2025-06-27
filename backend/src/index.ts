@@ -61,7 +61,8 @@ export async function connectToDBWithRetry(retries = 5, delay = 60000) {
             // Ensure all seasons from 2005-2025 are cached
             for (let year = 2005; year <= 2025; year++) {
                 try {
-                    await getSeasonWinners(year); // This will fetch and cache if not exists
+                    // fetch and cache if not exists
+                    await getSeasonWinners(year);
                 } catch (error) {
                     console.warn(`⚠️ Could not fetch season ${year}:`, error);
                 }

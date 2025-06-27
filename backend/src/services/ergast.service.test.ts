@@ -21,8 +21,13 @@ describe('ergast.service', () => {
     });
 
     describe('getSeasonWinners', () => {
+        const currentYear = new Date().getFullYear();
         it('should throw for year outside 2005–current', async () => {
             await expect(getSeasonWinners(1990)).rejects.toThrow('Year must be between');
+        });
+
+        it('should throw error for year after current year', async () => {
+            await expect(getSeasonWinners(currentYear + 1)).rejects.toThrow('Year must be between');
         });
 
     });
@@ -60,7 +65,7 @@ describe('ergast.service', () => {
 
         it('should correctly calculate champion based on total points', () => {
             const champion = calculateChampion(mockRaces as any);
-            expect(champion).toBe('Max Verstappen'); // 25 + 19 = 44 points
+            expect(champion).toBe('Max Verstappen');
         });
 
 

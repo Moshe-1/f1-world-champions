@@ -10,7 +10,7 @@ import {RouterModule} from '@angular/router';
   templateUrl: './seasons-list.component.html',
   styleUrls: ['./seasons-list.component.scss'],
   standalone: true,
-  imports: [NgIf, MatListModule,MatIconModule, RouterModule, NgFor], // Add these
+  imports: [NgIf, MatListModule,MatIconModule, RouterModule, NgFor],
 
 })
 export class SeasonsListComponent implements OnInit {
@@ -28,7 +28,6 @@ export class SeasonsListComponent implements OnInit {
     this.isLoading = true;
     this.f1Service.getSeasons().subscribe({
       next: (data) => {
-        console.log('Received data:', data); // Add this line
         this.seasons = data;
         this.isLoading = false;
       },
