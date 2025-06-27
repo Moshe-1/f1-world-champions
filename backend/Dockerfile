@@ -15,7 +15,7 @@ RUN npx prisma generate
 # Copy the rest
 COPY . .
 
-# Build (if using TypeScript)
+# Building the project
 RUN npm run build
 
 # Executes from /app
